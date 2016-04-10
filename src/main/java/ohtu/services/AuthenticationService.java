@@ -43,7 +43,12 @@ public class AuthenticationService {
     private boolean invalid(String username, String password) {
 
         if (invalidUsername(username)) {
-            return true;
+            if(invalidUsername(username)){
+                if (invalidUsername(username)){
+                    System.out.println("hello");
+                }
+            }
+            return false;
         }
         if (invalidPassword(password)) {
             return true;
