@@ -36,24 +36,31 @@ public class App {
             if (command.isEmpty()) {
                 break;
             }
+            newCommand(command);
+            loginCommand(command);
+        }
+    }
 
-            if (command.equals("new")) {
-                String[] usernameAndPasword = ask();
-                if (auth.createUser(usernameAndPasword[0], usernameAndPasword[1])) {
-                    io.print("new user registered");
-                } else {
-                    io.print("new user not registered");
-                }
-
-            } else if (command.equals("login")) {
-                String[] usernameAndPasword = ask();
-                if (auth.logIn(usernameAndPasword[0], usernameAndPasword[1])) {
-                    io.print("logged in");
-                } else {
-                    io.print("wrong username or password");
-                }
+    private void newCommand (String command) {
+        if (command.equals("new")) {
+            String[] usernameAndPasword = ask();
+            if (auth.createUser(usernameAndPasword[0], usernameAndPasword[1])) {
+                io.print("new user registered");
+            } else {
+                io.print("new user not registered");
             }
 
+        }
+    }
+
+    private void loginCommand (String command) {
+        if (command.equals("login")) {
+            String[] usernameAndPasword = ask();
+            if (auth.logIn(usernameAndPasword[0], usernameAndPasword[1])) {
+                io.print("logged in");
+            } else {
+                io.print("wrong username or password");
+            }
         }
     }
 
@@ -63,12 +70,12 @@ public class App {
         App application = ctx.getBean(App.class);
         application.run();
     }
-    
+
     // testejä debugatessa saattaa olla hyödyllistä testata ohjelman ajamista
     // samoin kuin testi tekee, eli injektoimalla käyttäjän syötteen StubIO:n avulla
     //
-    // UserDao dao = new InMemoryUserDao();  
-    // StubIO io = new StubIO("new", "eero", "sala1nen" );   
+    // UserDao dao = new InMemoryUserDao();
+    // StubIO io = new StubIO("new", "eero", "sala1nen" );
     //  AuthenticationService auth = new AuthenticationService(dao);
     // new App(io, auth).run();
     // System.out.println(io.getPrints());

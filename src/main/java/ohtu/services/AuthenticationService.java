@@ -18,17 +18,15 @@ public class AuthenticationService {
     }
 
     public boolean logIn(String username, String password) {
-        for (User user : userDao.listAll()) {
-            if (user.getUsername().equals(username)
-                    && user.getPassword().equals(password)) {
-                return true;
-            }
+        User user = userDao.findByName(username);
+        if (user != null && user.getPassword().equals(password)) {
+            return true;
         }
-
         return false;
     }
 
     public boolean createUser(String username, String password) {
+
         if (userDao.findByName(username) != null) {
             return false;
         }
@@ -43,14 +41,28 @@ public class AuthenticationService {
     }
 
     private boolean invalid(String username, String password) {
-        // validity check of username and password
 
-        if(userDao.findByName(username) == null && username.length() >= 3 && username.matches("^[a-z]+$")) {
-            if(password.length() >= 8 && password.matches("((?=(.*\\d){1,})|(?=(.*\\W){1,}))^.*$")) {
-                return false;
-            }
+        if (invalidUsername(username)) {
+            return true;
+        }
+        if (invalidPassword(password)) {
+            return true;
         }
 
+        return false;
+    }
+
+    private boolean invalidUsername(String username){
+        if(username.length() >= 3 && username.matches("^[a-z]+$")) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean invalidPassword(String password){
+        if(password.length() >= 8 && password.matches("((?=(.*\\d){1,})|(?=(.*\\W){1,}))^.*$")) {
+            return false;
+        }
         return true;
     }
 }
