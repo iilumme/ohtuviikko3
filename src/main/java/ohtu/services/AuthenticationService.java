@@ -1,23 +1,24 @@
 package ohtu.services;
 
 import ohtu.domain.User;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import ohtu.data_access.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-@Component
 public class AuthenticationService {
 
     private UserDao userDao;
 
-    @Autowired
     public AuthenticationService(UserDao userDao) {
         this.userDao = userDao;
     }
 
-    public boolean logIn(String username, String password) {
+    public boolean logIn(String username, String password) throws IOException {
         User user = userDao.findByName(username);
         if (user != null && user.getPassword().equals(password)) {
             return true;
@@ -25,7 +26,7 @@ public class AuthenticationService {
         return false;
     }
 
-    public boolean createUser(String username, String password) {
+    public boolean createUser(String username, String password) throws IOException {
 
         if (userDao.findByName(username) != null) {
             return false;

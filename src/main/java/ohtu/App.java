@@ -1,14 +1,13 @@
 package ohtu;
 
-import ohtu.data_access.InMemoryUserDao;
-import ohtu.data_access.UserDao;
-import ohtu.io.ConsoleIO;
 import ohtu.io.IO;
 import ohtu.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 @Component
 public class App {
@@ -29,7 +28,7 @@ public class App {
         return userPwd;
     }
 
-    public void run() {
+    public void run() throws IOException {
         while (true) {
             String command = io.readLine(">");
 
@@ -41,7 +40,7 @@ public class App {
         }
     }
 
-    private void newCommand (String command) {
+    private void newCommand (String command) throws IOException {
         if (command.equals("new")) {
             String[] usernameAndPasword = ask();
             if (auth.createUser(usernameAndPasword[0], usernameAndPasword[1])) {
@@ -53,7 +52,7 @@ public class App {
         }
     }
 
-    private void loginCommand (String command) {
+    private void loginCommand (String command) throws IOException {
         if (command.equals("login")) {
             String[] usernameAndPasword = ask();
             if (auth.logIn(usernameAndPasword[0], usernameAndPasword[1])) {
@@ -65,18 +64,14 @@ public class App {
     }
 
     public static void main(String[] args) {
+
         ApplicationContext ctx = new FileSystemXmlApplicationContext("src/main/resources/spring-context.xml");
 
         App application = ctx.getBean(App.class);
-        application.run();
+        try {
+            application.run();
+        } catch (IOException e) {
+            System.out.println("Not today, sorry :(");
+        }
     }
-
-    // testejä debugatessa saattaa olla hyödyllistä testata ohjelman ajamista
-    // samoin kuin testi tekee, eli injektoimalla käyttäjän syötteen StubIO:n avulla
-    //
-    // UserDao dao = new InMemoryUserDao();
-    // StubIO io = new StubIO("new", "eero", "sala1nen" );
-    //  AuthenticationService auth = new AuthenticationService(dao);
-    // new App(io, auth).run();
-    // System.out.println(io.getPrints());
 }
